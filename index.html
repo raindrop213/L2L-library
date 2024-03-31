@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>図書館</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/mainday.css" title="default">
+    <link rel="alternate stylesheet" href="css/mainnight.css" title="alternate" disabled="">
+    <script type="text/javascript" src="js/styleswitcher.js"></script>
+    <script type="text/javascript" src="js/global.js"></script>
+</head>
+
+<body>
+    <div class="bodydiv">
+        <div class="modechange">
+            <a href="#" onclick="setActiveStyleSheet('default'); return false;"><span
+                style="font-size:0.5em">Light</span></a>
+            <a href="index.html">図書館</a>
+            <a href="#" onclick="setActiveStyleSheet('alternate'); return false;"><span
+                style="font-size:0.5em">Dark</span></a>
+        </div>
+
+        <img id="itazuranekocat" src="tu.png">
+
+        <div style="clear:both">
+            <ul>
+                <li class="introtext">Press the B key to create a bookmark (blue or red line). Your browser will
+                    automatically scroll to the bookmark next time you load the page. Click the bookmark to remove it.
+                </li>
+            </ul>
+            <div class="subjectlinks">
+                <a href="#_tansatsu">単冊</a>
+                <a href="#_genre">シリーズ</a>
+            </div>
+
+            <div id="_genre"></div>
+            <div class="subjectlinks">
+                <h2>単冊</h2>
+            </div>
+            <div id="outer-grid">
+
+                <div>
+                    <div id="_tansatsu"></div>
+                    <p><strong><em><a href="bookshelf/kensaku.html" target="_blank">？？？</a></em></strong></p>
+                    <hr>
+                    <ul>
+                        <li>1 冊</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div id="_tuika"></div>
+                    <p><strong><em><a href="bookshelf/tuika.html" target="_blank">また、同じ夢を見ていた</a></em></strong></p>
+                    <hr>
+                    <ul>
+                        <li>1 冊</li>
+                    </ul>
+                    <div class="frontpages">
+                        <a href="bookshelf/tuika.html" target="_blank">1</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="_genre"></div>
+            <div class="subjectlinks">
+                <h2>シリーズ</h2>
+            </div>
+            <div id="outer-grid">
+                <div>
+                    <p><strong><em><a href="bookshelf/m001.html">安達としまむら</a></em></strong></p>
+                    <hr>
+                    <ul>
+                        <li>13 冊</li>
+                    </ul>
+                    <div class="frontpages">
+                        <a href="bookshelf/Adachi to Shimamura v01/index.html" target="_blank">1</a>
+                        <a href="bookshelf/m001-1.html" target="_blank">2</a>
+                        <a href="bookshelf/m001-2.html" target="_blank">3</a>
+                        <a href="bookshelf/m001-3.html" target="_blank">4</a>
+                        <a href="bookshelf/m001-4.html" target="_blank">5</a>
+                        <a href="bookshelf/m001-5.html" target="_blank">6</a>
+                        <a href="bookshelf/m001-6.html" target="_blank">7</a>
+                        <a href="bookshelf/m001-7.html" target="_blank">8</a>
+                        <a href="bookshelf/m001-8.html" target="_blank">9</a>
+                        <a href="bookshelf/m001-9.html" target="_blank">10</a>
+                        <a href="bookshelf/m001-10.html" target="_blank">11</a>
+                        <a href="bookshelf/m001-11.html" target="_blank">99.9</a>
+                        <a href="bookshelf/m001-11.html" target="_blank">SS</a>
+                    </div>
+                </div>
+
+                <div>
+                    <p><strong><em><a href="bookshelf/m021.html">やがて君になる佐伯沙弥香について</a></em></strong></p>
+                    <hr>
+                    <ul>
+                        <li>3 冊</li>
+                    </ul>
+                    <div class="frontpages">
+                        <a href="bookshelf/m021.html" target="_blank">1</a>
+                        <a href="bookshelf/m021-1.html" target="_blank">2</a>
+                        <a href="bookshelf/m021-2.html" target="_blank">3</a>
+                    </div>
+                </div>
+
+            </div>
+
+
+    </div>
+    <div class="spacer"></div>
+    </div>
+</body>
+
+</html>
