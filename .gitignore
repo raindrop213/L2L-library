@@ -1,3 +1,7 @@
 bookshelf
 other
 build
+
+bookshelf/*
+!bookshelf/read.css
+!bookshelf/read.js
