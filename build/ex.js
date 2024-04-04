@@ -53,5 +53,5 @@ async function extractAndSaveHTML(lang, selector, outputFileName) {
 }
 
 // 使用示例
-extractAndSaveHTML('build/ja', 'h1, p, a, img, image', 'c_ja.html');
-extractAndSaveHTML('build/zh', 'h1, p, a, img, image', 'c_zh.html');
+// extractAndSaveHTML('ja', 'h1, p, a, img, image', 'c_ja.html');
+extractAndSaveHTML('zh', 'h1, p, a, img, image', 'c_zh.html');
