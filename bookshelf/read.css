@@ -1,0 +1,80 @@
+body,
+html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    position: relative;
+    height: 100%;
+    min-height: 100vh;
+    /* 设置最小高度为视口高度 */
+}
+
+.row {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid transparent;
+    /* 默认无边框 */
+}
+
+.highlight {
+    border: 1px solid black;
+    /* 高亮显示的边框 */
+    background-color: lightgrey;
+    /* 高亮显示的背景色 */
+}
+
+.left,
+.right {
+    width: 50%;
+    padding: 15px;
+}
+
+.scroll-container {
+    /* position: absolute; */
+    top: 50%;
+    left: 0;
+    right: 0;
+    /* transform: translateY(-50%); */
+}
+
+.number {
+    position: absolute;
+    content: attr(data-index);
+    top: 10px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    /* 半透明背景 */
+    border-radius: 10px;
+    color: rgb(183, 223, 38);
+    z-index: 2;
+}
+
+  /* 添加按钮样式 */
+  .button-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1001; /* 确保按钮在最前面 */
+  }
+
+  .theme-toggle-button, .back-button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .theme-toggle-button {
+    background-color: #f0f0f0;
+  }
+
+  .back-button {
+    background-color: #ddd;
+  }

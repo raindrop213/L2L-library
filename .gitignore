@@ -1,6 +1,8 @@
-bookshelf
 other
-build
+
+build/*
+!build/ex.js
+!build/index.html
 
 bookshelf/*
 !bookshelf/read.css
