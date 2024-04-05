@@ -181,16 +181,21 @@ function toggleSelectCopy() {
     SelectCopyBtn.classList.remove('active');
   }
 }
-// 添加文本选择事件监听器以复制选择的文本
+
 document.addEventListener('mouseup', function(event) {
   if (isSelectCopy) {
-    const selection = window.getSelection().toString();
-    if (selection) {
-      copyTextToClipboard(removeRuby(selection));
+    // 获取选中的范围
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      // 创建一个新的div元素来存储HTML内容 将选中的范围的内容克隆到新的div元素中
+      const div = document.createElement('div');
+      div.appendChild(range.cloneContents());
+      // 使用removeRuby函数处理HTML字符串
+      copyTextToClipboard(removeRuby(div.innerHTML));
     }
   }
 });
-
 
 
 // 更新的点击事件处理程序
@@ -199,6 +204,7 @@ document.addEventListener("click", function (event) {
   const lightbox = document.getElementById("lightbox");
 
   if (row) {
+    lightbox.style.display = "none"; // 隐藏弹窗
     const index = Array.from(document.querySelectorAll(".row")).indexOf(row);
     window.history.pushState({}, "", "?line=" + index);
     document
@@ -209,8 +215,7 @@ document.addEventListener("click", function (event) {
     // 判断点击的是否为p、a、h1标签
     const textElement = row.querySelector(".left > p, .left > a, .left > h1");
     if (textElement && !isSelectCopy) {
-      lightbox.style.display = "none"; // 隐藏弹窗
-      const text = textElement.innerText || textElement.textContent;
+      const text = textElement.innerHTML || textElement.textContent;
       copyTextToClipboard(removeRuby(text));
     }
 
@@ -269,7 +274,7 @@ document.addEventListener("keydown", function (event) {
         const textElement = highlightedRow.querySelector(".left > p, .left > a, .left > h1");
         if (textElement && !isSelectCopy) {
           lightbox.style.display = "none"; // 隐藏弹窗
-          const text = textElement.innerText || textElement.textContent;
+          const text = textElement.innerHTML || textElement.textContent;
           copyTextToClipboard(removeRuby(text));
         }
 
