@@ -4,6 +4,5 @@ build/*
 !build/ex.js
 !build/index.html
 
-bookshelf/*
-!bookshelf/read.css
-!bookshelf/read.js
+**/zh/
+**/ja/
