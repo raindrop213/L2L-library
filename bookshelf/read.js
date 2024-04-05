@@ -120,6 +120,79 @@ document.addEventListener("DOMContentLoaded", function () {
   document.body.appendChild(lightbox);
 });
 
+
+// 添加按钮到页面
+function addButtons() {
+  // 使用模板字符串创建按钮和容器的HTML
+  const buttonsHTML = `
+    <div class="btn-container">
+      <button class="btn" onclick="toggleSelectCopy()">SelectCopy</button>
+      <button class="btn" onclick="toggleMask()">Mask</button>
+      <button class="btn" onclick="toggleNight()">Night</button>
+      <button class="btn" onclick="window.location.href='/'">HOME</button>
+    </div>
+  `;
+  // 直接将HTML字符串插入到body中
+  document.body.insertAdjacentHTML("beforeend", buttonsHTML);
+}
+window.onload = addButtons;
+
+// 初始化状态变量
+let isSelectCopy = false;
+let isMask = false;
+let isNight = false;
+
+// 切换亮暗模式的函数
+function toggleNight() {
+  isNight = !isNight;
+  const NightBtn = document.querySelector('.btn[onclick="toggleNight()"]');
+  if (isNight) {
+    document.body.classList.add("dark-mode");
+    NightBtn.classList.add('active');
+  } else {
+    document.body.classList.remove("dark-mode");
+    NightBtn.classList.remove('active');
+  }
+}
+
+// 切换蒙版模式的函数
+function toggleMask() {
+  isMask = !isMask;
+  const rows = document.querySelectorAll(".row");
+  const MaskBtn = document.querySelector('.btn[onclick="toggleMask()"]');
+  rows.forEach((row) => {
+    if (isMask) {
+      row.classList.add("show-mask");
+      MaskBtn.classList.add('active');
+    } else {
+      row.classList.remove("show-mask");
+      MaskBtn.classList.remove('active');
+    }
+  });
+}
+
+// 切换复制模式的函数
+function toggleSelectCopy() {
+  isSelectCopy = !isSelectCopy;
+  const SelectCopyBtn = document.querySelector('.btn[onclick="toggleSelectCopy()"]');
+  if (isSelectCopy) {
+    SelectCopyBtn.classList.add('active');
+  } else {
+    SelectCopyBtn.classList.remove('active');
+  }
+}
+// 添加文本选择事件监听器以复制选择的文本
+document.addEventListener('mouseup', function(event) {
+  if (isSelectCopy) {
+    const selection = window.getSelection().toString();
+    if (selection) {
+      copyTextToClipboard(removeRuby(selection));
+    }
+  }
+});
+
+
+
 // 更新的点击事件处理程序
 document.addEventListener("click", function (event) {
   const row = event.target.closest(".row");
@@ -135,7 +208,7 @@ document.addEventListener("click", function (event) {
 
     // 判断点击的是否为p、a、h1标签
     const textElement = row.querySelector(".left > p, .left > a, .left > h1");
-    if (textElement) {
+    if (textElement && !isSelectCopy) {
       lightbox.style.display = "none"; // 隐藏弹窗
       const text = textElement.innerText || textElement.textContent;
       copyTextToClipboard(removeRuby(text));
@@ -151,6 +224,7 @@ document.addEventListener("click", function (event) {
     }
   }
 });
+
 
 // 更新键盘事件处理程序
 let debounceTimer;
@@ -193,7 +267,7 @@ document.addEventListener("keydown", function (event) {
 
         // 判断点击的是否为p、a、h1标签
         const textElement = highlightedRow.querySelector(".left > p, .left > a, .left > h1");
-        if (textElement) {
+        if (textElement && !isSelectCopy) {
           lightbox.style.display = "none"; // 隐藏弹窗
           const text = textElement.innerText || textElement.textContent;
           copyTextToClipboard(removeRuby(text));
