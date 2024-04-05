@@ -126,10 +126,21 @@ function addButtons() {
   // 使用模板字符串创建按钮和容器的HTML
   const buttonsHTML = `
     <div class="btn-container">
+      <button class="btn" onclick="toggleGuide()">Guide</button>
       <button class="btn" onclick="toggleSelectCopy()">SelectCopy</button>
       <button class="btn" onclick="toggleMask()">Mask</button>
       <button class="btn" onclick="toggleNight()">Night</button>
       <button class="btn" onclick="window.location.href='/'">HOME</button>
+    </div>
+
+    <div id="guideModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3 class="guide">使用指南：</h3>
+        <p class="guide">【1】默认高亮点选的句子并且复制日文到剪切板，可点击 <b>SelectCopy</b> 切换成复制选中文本，都是默认去除振假名；</p>
+        <p class="guide">【2】键盘方向键 <b>↑</b> 上一句 和 <b>↓</b> 上一句，也会触发复制（受复制开关控制）；</p>
+        <p class="guide">【3】蒙版模式 <b>Mark</b> 仅显示选中的文本，其余隐藏。</p>
+      </div>
     </div>
   `;
   // 直接将HTML字符串插入到body中
@@ -141,6 +152,7 @@ window.onload = addButtons;
 let isSelectCopy = false;
 let isMask = false;
 let isNight = false;
+let isguide = false;
 
 // 切换亮暗模式的函数
 function toggleNight() {
@@ -196,6 +208,28 @@ document.addEventListener('mouseup', function(event) {
     }
   }
 });
+
+
+// 切换guide模态弹窗的函数
+function toggleGuide() {
+  const guideModal = document.getElementById('guideModal');
+  const GuideBtn = document.querySelector('.btn[onclick="toggleGuide()"]');
+  const closeBtn = guideModal.querySelector('.close');
+
+  // 切换guide模态窗口的显示状态
+  isguide = !isguide;
+  guideModal.style.display = isguide ? 'block' : 'none';
+
+  // 为关闭按钮添加事件监听器
+  closeBtn.onclick = function() {
+    guideModal.style.display = 'none';
+    GuideBtn.classList.remove('active');
+  };
+
+  if (isguide) {
+    GuideBtn.classList.add('active');
+  }
+}
 
 
 // 更新的点击事件处理程序
