@@ -13,6 +13,12 @@ async function extractAndSaveHTML(lang, selector, outputFileName) {
     // 提取指定元素并生成新的HTML字符串
     let newHTMLContent = '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>Extracted Content</title></head><body>\n';
     elements.forEach(el => {
+      // 如果元素是<p>并且只包含一个<a>或<img>
+      if (el.tagName.toLowerCase() === 'p' && el.children.length === 1 && ['a', 'img'].includes(el.children[0].tagName.toLowerCase())) {
+        const child = el.children[0];
+        // 移除<p>标签，保留<a>或<img>
+        el.replaceWith(child);
+      }
 
       // 如果元素是image标签，转换成img标签
       if (el.tagName.toLowerCase() === 'image') {
@@ -53,5 +59,5 @@ async function extractAndSaveHTML(lang, selector, outputFileName) {
 }
 
 // 使用示例
-// extractAndSaveHTML('ja', 'h1, p, a, img, image', 'c_ja.html');
+extractAndSaveHTML('ja', 'h1, p, a, img, image', 'c_ja.html');
 extractAndSaveHTML('zh', 'h1, p, a, img, image', 'c_zh.html');
