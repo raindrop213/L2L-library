@@ -286,10 +286,10 @@ document.addEventListener("keydown", function (event) {
       }
     }
 
-    if (event.keyCode === 37 && currentIndex > 0) {
+    if (event.keyCode === 38 && currentIndex > 0) {
       // 左箭头键
       newIndex = currentIndex - 1;
-    } else if (event.keyCode === 39 && currentIndex < maxIndex) {
+    } else if (event.keyCode === 40 && currentIndex < maxIndex) {
       // 右箭头键
       newIndex = currentIndex + 1;
     }
