@@ -138,13 +138,13 @@ function addButtons() {
       <button class="btn" onclick="window.location.href='/'">HOME</button>
     </div>
 
-    <button class="btn btn-prev" onclick="navigateRows(-1)"></button>
-    <button class="btn btn-next" onclick="navigateRows(1)"></button>
+    <button class="btn-prev" onclick="navigateRows(-1)"></button>
+    <button class="btn-next" onclick="navigateRows(1)"></button>
 
     <div id="guideModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
-        <h3 class="guide">使用指南：</h3>
+        <h2 class="guide">使用指南：</h2>
         <p class="guide">【1】键盘方向键 <b>↑</b> 上一句 和 <b>↓</b> 上一句，或者点击页面上下部分也可以跳转，还可以直接点击句子；它们都会触发高亮；</p>
         <p class="guide">【2】高亮之后的句子会复制日文到剪切板，可点击 <b>SelectCopy</b> 切换成复制选中文本，都是默认去除振假名；</p>
         <p class="guide">【3】蒙版模式 <b>Mark</b> 仅显示选中的文本，其余隐藏；</p>
@@ -155,7 +155,6 @@ function addButtons() {
   // 直接将HTML字符串插入到body中
   document.body.insertAdjacentHTML("beforeend", buttonsHTML);
 }
-window.onload = addButtons;
 
 // 初始化状态变量
 let isSelectCopy = false;
@@ -168,16 +167,16 @@ let istoggleVertical = false;
 function toggleVertical() {
   istoggleVertical = !istoggleVertical;
   const container = document.querySelector('.scroll-container');
-  const VerticalBtn = document.querySelector('.btn[onclick="toggleVertical()"]');
+  const verticalBtn = document.querySelector('.btn[onclick="toggleVertical()"]');
   if (istoggleVertical) {
     container.classList.add("vertical-rtl");
-    VerticalBtn.classList.add('active');
+    verticalBtn.classList.add('active');
   } else {
     container.classList.remove("vertical-rtl");
-    VerticalBtn.classList.remove('active');
+    verticalBtn.classList.remove('active');
   }
 
-  // 获取当前高亮行的索引
+  // 重新定位到当前高亮行
   const currentIndex = window.location.search
     ? parseInt(new URLSearchParams(window.location.search).get("line"))
     : 0;
@@ -193,13 +192,15 @@ function toggleVertical() {
 // 切换亮暗模式的函数
 function toggleNight() {
   isNight = !isNight;
-  const NightBtn = document.querySelector('.btn[onclick="toggleNight()"]');
+  const nightBtn = document.querySelector('.btn[onclick="toggleNight()"]');
   if (isNight) {
     document.body.classList.add("dark-mode");
-    NightBtn.classList.add('active');
+    nightBtn.classList.add('active');
+    localStorage.setItem('nightMode', 'true');
   } else {
     document.body.classList.remove("dark-mode");
-    NightBtn.classList.remove('active');
+    nightBtn.classList.remove('active');
+    localStorage.setItem('nightMode', 'false');
   }
 }
 
@@ -207,14 +208,14 @@ function toggleNight() {
 function toggleMask() {
   isMask = !isMask;
   const rows = document.querySelectorAll(".row");
-  const MaskBtn = document.querySelector('.btn[onclick="toggleMask()"]');
+  const maskBtn = document.querySelector('.btn[onclick="toggleMask()"]');
   rows.forEach((row) => {
     if (isMask) {
       row.classList.add("show-mask");
-      MaskBtn.classList.add('active');
+      maskBtn.classList.add('active');
     } else {
       row.classList.remove("show-mask");
-      MaskBtn.classList.remove('active');
+      maskBtn.classList.remove('active');
     }
   });
 }
@@ -222,11 +223,11 @@ function toggleMask() {
 // 切换复制模式的函数
 function toggleSelectCopy() {
   isSelectCopy = !isSelectCopy;
-  const SelectCopyBtn = document.querySelector('.btn[onclick="toggleSelectCopy()"]');
+  const selectCopyBtn = document.querySelector('.btn[onclick="toggleSelectCopy()"]');
   if (isSelectCopy) {
-    SelectCopyBtn.classList.add('active');
+    selectCopyBtn.classList.add('active');
   } else {
-    SelectCopyBtn.classList.remove('active');
+    selectCopyBtn.classList.remove('active');
   }
 }
 
@@ -264,6 +265,8 @@ function toggleGuide() {
 
   if (isguide) {
     GuideBtn.classList.add('active');
+  } else {
+    GuideBtn.classList.remove('active');
   }
 }
 
@@ -358,3 +361,15 @@ document.querySelectorAll('.btn-prev, .btn-next').forEach(button => {
     navigateRows(direction);
   });
 });
+
+
+function applyInitialSettings() {
+  // 应用夜间模式设置
+  const nightMode = localStorage.getItem('nightMode') === 'true';
+  toggleNight(nightMode);
+}
+
+window.onload = function() {
+  addButtons(); // 添加按钮
+  applyInitialSettings(); // 应用初始设置
+};
