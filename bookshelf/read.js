@@ -109,28 +109,21 @@ const urlParams = new URLSearchParams(window.location.search);
 const startIndex = urlParams.get("line");
 displayContent(startIndex);
 
-// 页面加载时创建弹窗
+// 页面加载时创建图片弹窗
 document.addEventListener("DOMContentLoaded", function () {
-  // 创建lightbox元素
   const lightbox = document.createElement("div");
   lightbox.id = "lightbox";
-  lightbox.style.display = "none"; // 默认隐藏
-  lightbox.style.position = "fixed"; // 固定位置
-  lightbox.style.top = "50%"; // 垂直居中
-  lightbox.style.left = "50%"; // 水平居中
-  lightbox.style.transform = "translate(-50%, -50%)"; // 修正位置偏移
-  lightbox.style.zIndex = "1000"; // 确保在最前面
 
-  // 在lightbox内部创建图片容器 有无display决定是否横排
+  // 设置lightbox的内部HTML，这部分主要用于布局和内容
   lightbox.innerHTML = `
-        <div class="lightbox-content" style="display: flex; justify-content: center; align-items: center; height: 100%; ">
-            <img class="lightbox-img" style="max-width: 70%;">
-            <img class="lightbox-img" style="max-width: 70%;">
-        </div>
-    `;
+    <div class="lightbox-content">
+      <img class="lightbox-img">
+      <img class="lightbox-img">
+    </div>
+  `;
+
   document.body.appendChild(lightbox);
 });
-
 
 // 添加按钮到页面
 function addButtons() {
@@ -140,18 +133,22 @@ function addButtons() {
       <button class="btn" onclick="toggleGuide()">Guide</button>
       <button class="btn" onclick="toggleSelectCopy()">SelectCopy</button>
       <button class="btn" onclick="toggleMask()">Mask</button>
-      <button class="btn" onclick="toggleVerticalLayout()">Vertical</button>
+      <button class="btn" onclick="toggleVertical()">Vertical</button>
       <button class="btn" onclick="toggleNight()">Night</button>
       <button class="btn" onclick="window.location.href='/'">HOME</button>
     </div>
+
+    <button class="btn btn-prev" onclick="navigateRows(-1)"></button>
+    <button class="btn btn-next" onclick="navigateRows(1)"></button>
 
     <div id="guideModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
         <h3 class="guide">使用指南：</h3>
-        <p class="guide">【1】默认高亮点选的句子并且复制日文到剪切板，可点击 <b>SelectCopy</b> 切换成复制选中文本，都是默认去除振假名；</p>
-        <p class="guide">【2】键盘方向键 <b>↑</b> 上一句 和 <b>↓</b> 上一句，也会触发复制（受复制开关控制）；</p>
-        <p class="guide">【3】蒙版模式 <b>Mark</b> 仅显示选中的文本，其余隐藏。</p>
+        <p class="guide">【1】键盘方向键 <b>↑</b> 上一句 和 <b>↓</b> 上一句，或者点击页面上下部分也可以跳转，还可以直接点击句子；它们都会触发高亮；</p>
+        <p class="guide">【2】高亮之后的句子会复制日文到剪切板，可点击 <b>SelectCopy</b> 切换成复制选中文本，都是默认去除振假名；</p>
+        <p class="guide">【3】蒙版模式 <b>Mark</b> 仅显示选中的文本，其余隐藏；</p>
+        <p class="guide">【4】垂直模式 <b>Vertical</b> 切换至竖排版，从右到左阅读。</p>
       </div>
     </div>
   `;
@@ -165,16 +162,19 @@ let isSelectCopy = false;
 let isMask = false;
 let isNight = false;
 let isguide = false;
-let isVerticalLayout = false;
+let istoggleVertical = false;
 
 // 切换竖向排版状态
-function toggleVerticalLayout() {
-  isVerticalLayout = !isVerticalLayout;
+function toggleVertical() {
+  istoggleVertical = !istoggleVertical;
   const container = document.querySelector('.scroll-container');
-  if (isVerticalLayout) {
+  const VerticalBtn = document.querySelector('.btn[onclick="toggleVertical()"]');
+  if (istoggleVertical) {
     container.classList.add("vertical-rtl");
+    VerticalBtn.classList.add('active');
   } else {
     container.classList.remove("vertical-rtl");
+    VerticalBtn.classList.remove('active');
   }
 
   // 获取当前高亮行的索引
@@ -300,68 +300,61 @@ document.addEventListener("click", function (event) {
   }
 });
 
+// 跳转到某一条的函数
+function navigateRows(direction) {
+  const currentIndex = window.location.search
+    ? parseInt(new URLSearchParams(window.location.search).get("line"), 10)
+    : 0;
+  const maxIndex = document.querySelectorAll(".row").length - 1;
+  let newIndex = currentIndex + direction;
 
-// 更新键盘事件处理程序
+  if (newIndex < 0) newIndex = 0;
+  if (newIndex > maxIndex) newIndex = maxIndex;
+
+  window.history.pushState({}, "", "?line=" + newIndex);
+
+  document.querySelectorAll(".row").forEach(row => row.classList.remove("highlight"));
+  const highlightedRow = document.getElementById("row-" + newIndex);
+  if (highlightedRow) {
+    highlightedRow.classList.add("highlight");
+    highlightedRow.scrollIntoView({ behavior: "auto", block: "center" });
+
+    // Handle text and image pop-up
+    const textElement = highlightedRow.querySelector(".ja > p, .ja > a, .ja > h1");
+    const imgElement = highlightedRow.querySelector(".ja > img");
+    const lightbox = document.getElementById("lightbox");
+
+    if (textElement && !isSelectCopy) {
+      const text = textElement.innerHTML || textElement.textContent;
+      copyTextToClipboard(removeRuby(text));
+    }
+
+    if (imgElement) {
+      const imgs = lightbox.querySelectorAll(".lightbox-img");
+      imgs[0].src = imgElement.src;
+      imgs[1].src = highlightedRow.querySelector(".zh > img").src;
+      lightbox.style.display = "block";
+    } else {
+      lightbox.style.display = "none";
+    }
+  }
+}
+
+// 键盘事件处理程序
 let debounceTimer;
 document.addEventListener("keydown", function (event) {
-
-  // 禁止方向键会移动窗口
   event.preventDefault();
-  // 清除之前的计时器
   clearTimeout(debounceTimer);
-
-  // 设置新的计时器
   debounceTimer = setTimeout(function () {
-    const currentIndex = window.location.search
-      ? parseInt(new URLSearchParams(window.location.search).get("line"))
-      : 0;
-    const maxIndex = document.querySelectorAll(".row").length - 1;
-    let newIndex = currentIndex;
+    const direction = event.keyCode === 38 ? -1 : (event.keyCode === 40 ? 1 : 0);
+    if (direction !== 0) navigateRows(direction);
+  }, 80);
+});
 
-    const lightbox = document.getElementById("lightbox");
-    if (event.key === "Escape") {
-      if (lightbox && lightbox.style.display === "block") {
-        lightbox.style.display = "none";
-      }
-    }
-
-    if (event.keyCode === 38 && currentIndex > 0) {
-      // 左箭头键
-      newIndex = currentIndex - 1;
-    } else if (event.keyCode === 40 && currentIndex < maxIndex) {
-      // 右箭头键
-      newIndex = currentIndex + 1;
-    }
-
-    if (newIndex !== currentIndex) {
-      window.history.pushState({}, "", "?line=" + newIndex);
-      document
-        .querySelectorAll(".row")
-        .forEach((row) => row.classList.remove("highlight"));
-      const highlightedRow = document.getElementById("row-" + newIndex);
-      if (highlightedRow) {
-        highlightedRow.classList.add("highlight");
-        highlightedRow.scrollIntoView({ behavior: "auto", block: "center" });
-
-        // 判断点击的是否为p、a、h1标签
-        const textElement = highlightedRow.querySelector(".ja > p, .ja > a, .ja > h1");
-        if (textElement && !isSelectCopy) {
-          lightbox.style.display = "none"; // 隐藏弹窗
-          const text = textElement.innerHTML || textElement.textContent;
-          copyTextToClipboard(removeRuby(text));
-        }
-
-        // 检查新高亮的行是否包含图片
-        const imgElement = highlightedRow.querySelector(".ja > img");
-        if (imgElement) {
-          const imgs = lightbox.querySelectorAll(".lightbox-img");
-          imgs[0].src = imgElement.src; // 更新左边图片
-          imgs[1].src = highlightedRow.querySelector(".zh > img").src; // 更新右边图片
-          lightbox.style.display = "block"; // 显示弹窗
-        } else {
-          lightbox.style.display = "none"; // 如果没有图片，则隐藏弹窗
-        }
-      }
-    }
-  }, 80); // 防抖时间
+// 上下句按钮
+document.querySelectorAll('.btn-prev, .btn-next').forEach(button => {
+  button.addEventListener('click', function() {
+    const direction = this.classList.contains('btn-prev') ? -1 : 1;
+    navigateRows(direction);
+  });
 });
