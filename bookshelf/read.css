@@ -1,15 +1,12 @@
 body,
 html {
-  height: 100%;
-  margin: 0;
   font-family: Arial, sans-serif;
 }
 
 .container {
   position: relative;
-  height: 100%;
   min-height: 100vh;
-  padding: 20px;
+  margin: 20px;
   /* 设置最小高度为视口高度 */
 }
 
@@ -17,6 +14,7 @@ html {
   display: block; /* 改为块级元素，取消flex布局 */
   padding: 10px;
   border: 1px solid transparent; /* 默认无边框 */
+  position: relative; /* 添加这行代码 */
 }
 
 .ja {
@@ -52,12 +50,17 @@ html {
   position: absolute;
   content: attr(data-index);
   top: 10px;
+  bottom: auto;
   right: 20px;
-  background-color: rgba(37, 37, 37, 0.507);
-  /* 半透明背景 */
+  background-color: rgba(37, 37, 37, 0.3);
   border-radius: 10px;
   color: rgb(255, 255, 255);
   z-index: 2;
+}
+
+.vertical-rtl .number {
+  top: auto;
+  bottom: 10px;
 }
 
 .btn-container {
@@ -163,4 +166,19 @@ html {
 
 .guide {
   color: #000000;
+}
+
+.vertical-rtl {
+  writing-mode: vertical-rl; /* 设置文本竖直书写，从右向左 */
+  overflow: hidden; /* 隐藏溢出的内容 */
+}
+
+.vertical-rtl .row {
+  display: flex; /* 继续使用flex布局 */
+  flex-direction: column; /* 列排列 */
+}
+
+.vertical-rtl .ja, .vertical-rtl .zh {
+  height: 90%; /* 全宽，防止内容溢出 */
+  text-align: left; /* 文本靠左对齐 */
 }

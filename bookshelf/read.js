@@ -140,6 +140,7 @@ function addButtons() {
       <button class="btn" onclick="toggleGuide()">Guide</button>
       <button class="btn" onclick="toggleSelectCopy()">SelectCopy</button>
       <button class="btn" onclick="toggleMask()">Mask</button>
+      <button class="btn" onclick="toggleVerticalLayout()">Vertical</button>
       <button class="btn" onclick="toggleNight()">Night</button>
       <button class="btn" onclick="window.location.href='/'">HOME</button>
     </div>
@@ -164,6 +165,30 @@ let isSelectCopy = false;
 let isMask = false;
 let isNight = false;
 let isguide = false;
+let isVerticalLayout = false;
+
+// 切换竖向排版状态
+function toggleVerticalLayout() {
+  isVerticalLayout = !isVerticalLayout;
+  const container = document.querySelector('.scroll-container');
+  if (isVerticalLayout) {
+    container.classList.add("vertical-rtl");
+  } else {
+    container.classList.remove("vertical-rtl");
+  }
+
+  // 获取当前高亮行的索引
+  const currentIndex = window.location.search
+    ? parseInt(new URLSearchParams(window.location.search).get("line"))
+    : 0;
+
+  // 滚动到当前行
+  const highlightedRow = document.getElementById("row-" + currentIndex);
+  if (highlightedRow) {
+    highlightedRow.classList.add("highlight");
+    highlightedRow.scrollIntoView({ behavior: "auto", block: "center" });
+  }
+}
 
 // 切换亮暗模式的函数
 function toggleNight() {
