@@ -9,16 +9,24 @@ html {
   position: relative;
   height: 100%;
   min-height: 100vh;
+  padding: 20px;
   /* 设置最小高度为视口高度 */
 }
 
 .row {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
+  display: block; /* 改为块级元素，取消flex布局 */
   padding: 10px;
-  border: 1px solid transparent;
-  /* 默认无边框 */
+  border: 1px solid transparent; /* 默认无边框 */
+}
+
+.ja {
+  font-family: 'Meiryo', 'MS PGothic', sans-serif; /* 设置日文字体 */
+  font-size: 16px; /* 日文的字体大小 */
+}
+
+.zh {
+  font-family: 'SimSun', 'Arial', sans-serif; /* 设置中文字体 */
+  font-size: 16px; /* 中文的字体大小 */
 }
 
 .highlight {
@@ -28,10 +36,10 @@ html {
   /* 高亮显示的背景色 */
 }
 
-.left,
-.right {
-  width: 50%;
-  padding: 15px;
+/* 调整高亮样式以符合新的布局 */
+.highlight .ja,
+.highlight .zh {
+  background-color: lightgrey;
 }
 
 .scroll-container {
@@ -61,7 +69,6 @@ html {
 }
 
 .btn {
-  margin-left: 5px;
   cursor: pointer;
   padding: 5px 10px;
   border: none;
@@ -85,6 +92,13 @@ html {
   color: rgb(103, 16, 184);
 }
 
+/* 调整暗黑模式下的颜色设置 */
+.dark-mode .highlight .ja,
+.dark-mode .highlight .zh {
+  background-color: #555;
+}
+
+
 /* 遮罩层样式 */
 .mask {
   display: none;
@@ -97,13 +111,13 @@ html {
   z-index: 10;
 }
 
-/* 当遮罩层显示时，隐藏.right中的内容 */
-.show-mask .right {
+/* 当遮罩层显示时，隐藏.zh中的内容 */
+.show-mask .zh {
   visibility: hidden;
 }
 
 /* highlight类中的内容始终可见 */
-.highlight .right {
+.highlight .zh {
   visibility: visible !important;
 }
 

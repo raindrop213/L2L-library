@@ -67,21 +67,32 @@ function displayContent(startIndex = 0) {
         // 添加包含编号的 span 元素
         const numberSpan = document.createElement("span");
         numberSpan.className = "number";
-        numberSpan.textContent = index; // 编号从 1 开始
+        numberSpan.textContent = index + 1; // 编号从1开始
         rowDiv.appendChild(numberSpan);
-        rowDiv.innerHTML += `<div class="left">${el}</div><div class="right">${zhElementsBeforeHR[index]}</div>`;
+
+        // 创建日文和中文的div
+        const jaDiv = document.createElement("div");
+        jaDiv.className = "ja";
+        jaDiv.innerHTML = el;
+        const zhDiv = document.createElement("div");
+        zhDiv.className = "zh";
+        zhDiv.innerHTML = zhElementsBeforeHR[index];
+
+        rowDiv.appendChild(jaDiv);
+        rowDiv.appendChild(zhDiv);
         scrollContainer.appendChild(rowDiv);
       });
+
 
       // 处理<hr>标签之后的内容
       if (jaContentAfterHR && zhContentAfterHR) {
         const hrRowDiv = document.createElement("div");
         hrRowDiv.className = "row";
-        hrRowDiv.innerHTML = `<div class="left"><hr>${jaContentAfterHR}</div><div class="right"><hr>${zhContentAfterHR}</div>`;
+        hrRowDiv.innerHTML = `<div class="ja"><hr>${jaContentAfterHR}</div><div class="zh"><hr>${zhContentAfterHR}</div>`;
         scrollContainer.appendChild(hrRowDiv);
       }
 
-      // Scroll to the specified row and highlight it
+      // 滚动到指定行并且高亮
       const highlightedRow = document.getElementById("row-" + startIndex);
       if (highlightedRow) {
         highlightedRow.classList.add("highlight");
@@ -107,14 +118,14 @@ document.addEventListener("DOMContentLoaded", function () {
   lightbox.style.position = "fixed"; // 固定位置
   lightbox.style.top = "50%"; // 垂直居中
   lightbox.style.left = "50%"; // 水平居中
-  lightbox.style.transform = "translate(-50%, -50%)"; // 确保居中
+  lightbox.style.transform = "translate(-50%, -50%)"; // 修正位置偏移
   lightbox.style.zIndex = "1000"; // 确保在最前面
 
-  // 在lightbox内部创建图片容器  有无display决定是否横排
+  // 在lightbox内部创建图片容器 有无display决定是否横排
   lightbox.innerHTML = `
-        <div class="lightbox-content" style="display: flex; justify-content: center; ">
-            <img class="lightbox-img" style="max-width: 75%;">
-            <img class="lightbox-img" style="max-width: 75%;">
+        <div class="lightbox-content" style="display: flex; justify-content: center; align-items: center; height: 100%; ">
+            <img class="lightbox-img" style="max-width: 70%;">
+            <img class="lightbox-img" style="max-width: 70%;">
         </div>
     `;
   document.body.appendChild(lightbox);
@@ -247,18 +258,18 @@ document.addEventListener("click", function (event) {
     row.classList.add("highlight");
 
     // 判断点击的是否为p、a、h1标签
-    const textElement = row.querySelector(".left > p, .left > a, .left > h1");
+    const textElement = row.querySelector(".ja > p, .ja > a, .ja > h1");
     if (textElement && !isSelectCopy) {
       const text = textElement.innerHTML || textElement.textContent;
       copyTextToClipboard(removeRuby(text));
     }
 
     // 判断点击的是否为img标签
-    const imgElement = row.querySelector(".left > img");
+    const imgElement = row.querySelector(".ja > img");
     if (imgElement) {
       const imgs = lightbox.querySelectorAll(".lightbox-img");
       imgs[0].src = imgElement.src; // 更新左边图片
-      imgs[1].src = row.querySelector(".right > img").src; // 更新右边图片
+      imgs[1].src = row.querySelector(".zh > img").src; // 更新右边图片
       lightbox.style.display = "block"; // 显示弹窗
     }
   }
@@ -268,6 +279,9 @@ document.addEventListener("click", function (event) {
 // 更新键盘事件处理程序
 let debounceTimer;
 document.addEventListener("keydown", function (event) {
+
+  // 禁止方向键会移动窗口
+  event.preventDefault();
   // 清除之前的计时器
   clearTimeout(debounceTimer);
 
@@ -305,7 +319,7 @@ document.addEventListener("keydown", function (event) {
         highlightedRow.scrollIntoView({ behavior: "auto", block: "center" });
 
         // 判断点击的是否为p、a、h1标签
-        const textElement = highlightedRow.querySelector(".left > p, .left > a, .left > h1");
+        const textElement = highlightedRow.querySelector(".ja > p, .ja > a, .ja > h1");
         if (textElement && !isSelectCopy) {
           lightbox.style.display = "none"; // 隐藏弹窗
           const text = textElement.innerHTML || textElement.textContent;
@@ -313,11 +327,11 @@ document.addEventListener("keydown", function (event) {
         }
 
         // 检查新高亮的行是否包含图片
-        const imgElement = highlightedRow.querySelector(".left > img");
+        const imgElement = highlightedRow.querySelector(".ja > img");
         if (imgElement) {
           const imgs = lightbox.querySelectorAll(".lightbox-img");
           imgs[0].src = imgElement.src; // 更新左边图片
-          imgs[1].src = highlightedRow.querySelector(".right > img").src; // 更新右边图片
+          imgs[1].src = highlightedRow.querySelector(".zh > img").src; // 更新右边图片
           lightbox.style.display = "block"; // 显示弹窗
         } else {
           lightbox.style.display = "none"; // 如果没有图片，则隐藏弹窗
