@@ -232,8 +232,10 @@ function toggleSelectCopy() {
   const selectCopyBtn = document.querySelector('.btn[onclick="toggleSelectCopy()"]');
   if (isSelectCopy) {
     selectCopyBtn.classList.add('active');
+    localStorage.setItem('selectCopyMode', 'true');
   } else {
     selectCopyBtn.classList.remove('active');
+    localStorage.setItem('selectCopyMode', 'false');
   }
 }
 

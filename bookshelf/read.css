@@ -82,11 +82,11 @@ body, html {
 
 .btn {
   cursor: pointer;
-  padding: 5px 5px;
+  padding: 8px 5px;
   color: #000000;
   border: none;
   border-radius: 5px;
-  box-shadow: inset 10px 10px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 10px 10px 20px rgba(0, 0, 0, 0.2);
   font-size: 20px;
   font-family:'Segoe UI', Tahoma, Verdana, sans-serif;
 }
@@ -209,7 +209,6 @@ body, html {
 .lightbox-content {
   display: flex;
   justify-content: center;
-  align-items: center;
   height: 100%;
 }
 
