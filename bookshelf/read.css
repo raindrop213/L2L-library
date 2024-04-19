@@ -74,7 +74,7 @@ body, html {
 /* 功能按钮 */
 .btn-container {
   position: fixed; /* 保持固定位置 */
-  top: 0;
+  bottom: 0px;
   right: 0px;
   z-index: 1000; /* 高于大多数其他元素 */
   padding: 10px;
