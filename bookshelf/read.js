@@ -190,9 +190,15 @@ function toggleVertical() {
 }
 
 // 切换亮暗模式的函数
-function toggleNight() {
-  isNight = !isNight;
+function toggleNight(forceMode) {
   const nightBtn = document.querySelector('.btn[onclick="toggleNight()"]');
+  
+  if (forceMode === undefined) {
+    isNight = !isNight;
+  } else {
+    isNight = forceMode;
+  }
+
   if (isNight) {
     document.body.classList.add("dark-mode");
     nightBtn.classList.add('active');
