@@ -3,6 +3,8 @@ other
 
 build/*
 !build/ex.js
+!build/server.js
+!build/public/
 !build/index.html
 
 **/zh/
