@@ -1,11 +1,20 @@
 /* 基本样式设置 */
-body, html {
+html {
   font-family: Arial, sans-serif;
+  height: 100%;
+}
+
+body {
+  margin: 0 auto; /* 居中显示，并去除默认的边距 */
+  max-width: 1000px; /* 设定最大宽度为800像素 */
+  padding: 0 20px;
 }
 
 /* 容器样式 */
 .container {
   position: relative;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(133, 133, 133, 0.15); 
 }
 
 /* 行与列布局样式 */
@@ -18,12 +27,13 @@ body, html {
 
 .ja {
   font-family: 'Meiryo', 'MS PGothic', sans-serif; /* 设置日文字体 */
-  font-size: 20px; /* 日文的字体大小 */
+  font-size: 18px; /* 日文的字体大小 */
 }
 
 .zh {
   font-family: 'Microsoft YaHei', 'Arial', sans-serif; /* 设置中文字体 */
-  font-size: 20px; /* 中文的字体大小 */
+  font-size: 18px; /* 中文的字体大小 */
+  color: #7c7c7cbe;
 }
 
 .vertical-rtl {
