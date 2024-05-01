@@ -164,7 +164,7 @@ let isNight = false;
 let isguide = false;
 let istoggleVertical = false;
 let fontSizeIndex = 0; // 默认从第一个大小开始
-const fontSizes = ["18px", "22px", "26px"]; // 可切换的文字大小数组
+const fontSizes = ["24px", "30px", "18px"]; // 可切换的文字大小数组
 
 
 function toggleFontSize() {
