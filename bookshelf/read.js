@@ -148,7 +148,7 @@ function addButtons() {
         <p class="guide">【1】键盘方向键 <b>↑</b> 上一句 和 <b>↓</b> 上一句，或者点击页面上下部分也可以跳转，还可以直接点击句子；它们都会触发高亮；</p>
         <p class="guide">【2】高亮之后的句子会复制日文到剪切板，可点击 <b>SelectCopy</b> 切换成复制选中文本，都是默认去除振假名；</p>
         <p class="guide">【3】蒙版模式 <b>Mark</b> 仅显示选中的文本，其余隐藏；</p>
-        <p class="guide">【4】垂直模式 <b>Vertical</b> 切换至竖排版，从右到左阅读。</p>
+        <p class="guide">【4】（尚未完善）垂直模式 <b>Vertical</b> 切换至竖排版，从右到左阅读。</p>
       </div>
     </div>
   `;
