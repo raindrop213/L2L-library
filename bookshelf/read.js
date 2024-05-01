@@ -145,8 +145,8 @@ function addButtons() {
       <div class="modal-content">
         <span class="close">&times;</span>
         <h2 class="guide">使用指南：</h2>
-        <p class="guide">【1】键盘方向键 <b>↑</b> 上一句 和 <b>↓</b> 上一句，或者点击页面上下部分也可以跳转，还可以直接点击句子；它们都会触发高亮；</p>
-        <p class="guide">【2】高亮之后的句子会复制日文到剪切板，可点击 <b>SelectCopy</b> 切换成复制选中文本，都是默认去除振假名；</p>
+        <p class="guide">【1】键盘方向键 <b>↑</b> 上一句 和 <b>↓</b> 上一句，或者点击页面上下部分区域也可以逐句跳转，还可以直接点击句子；</p>
+        <p class="guide">【2】被框住的句子会复制日文到剪切板；如果想选择文字的话可点击 <b>SelectCopy</b> 切换成复制鼠标选中文本的模式，都是默认去除振假名；</p>
         <p class="guide">【3】蒙版模式 <b>Mark</b> 仅显示选中的文本，其余隐藏；</p>
         <p class="guide">【4】（尚未完善）垂直模式 <b>Vertical</b> 切换至竖排版，从右到左阅读。</p>
       </div>
@@ -354,12 +354,20 @@ function navigateRows(direction) {
 // 键盘事件处理程序
 let debounceTimer;
 document.addEventListener("keydown", function (event) {
-  event.preventDefault();
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(function () {
-    const direction = event.keyCode === 38 ? -1 : (event.keyCode === 40 ? 1 : 0);
-    if (direction !== 0) navigateRows(direction);
-  }, 80);
+  // 检查是否按下了Esc键（keyCode 27）
+  if (event.keyCode === 27) {
+    const lightbox = document.getElementById("lightbox");
+    if (lightbox.style.display === "block") {
+      lightbox.style.display = "none"; // 关闭lightbox
+    }
+  }
+
+  // 检查是否按下了上箭头（keyCode 38）或下箭头（keyCode 40）
+  if (event.keyCode === 38 || event.keyCode === 40) {
+    event.preventDefault(); // 阻止默认滚动行为
+    const direction = event.keyCode === 38 ? -1 : 1;
+    navigateRows(direction);
+  }
 });
 
 // 上下句按钮
