@@ -131,6 +131,7 @@ function addButtons() {
   const buttonsHTML = `
     <div class="btn-container">
       <button class="btn" onclick="toggleGuide()">Guide</button>
+      <button class="btn" onclick="toggleFontSize()">TextSize: ${fontSizes[0]}</button>
       <button class="btn" onclick="toggleSelectCopy()">SelectCopy</button>
       <button class="btn" onclick="toggleMask()">Mask</button>
       <button class="btn" onclick="toggleVertical()">Vertical</button>
@@ -162,6 +163,23 @@ let isMask = false;
 let isNight = false;
 let isguide = false;
 let istoggleVertical = false;
+let fontSizeIndex = 0; // 默认从第一个大小开始
+const fontSizes = ["18px", "22px", "26px"]; // 可切换的文字大小数组
+
+
+function toggleFontSize() {
+  fontSizeIndex = (fontSizeIndex + 1) % fontSizes.length; // 更新索引循环
+  const fontSize = fontSizes[fontSizeIndex]; // 获取当前索引的字体大小
+  // 应用新的字体大小到所有相关元素
+  document.querySelectorAll(".ja, .zh").forEach(element => {
+    element.style.fontSize = fontSize;
+  });
+  // 更新按钮文本显示当前大小
+  const fontSizeBtn = document.querySelector('.btn[onclick="toggleFontSize()"]');
+  if (fontSizeBtn) {
+    fontSizeBtn.textContent = `Text: ${fontSize}`;
+  }
+}
 
 // 切换竖向排版状态
 function toggleVertical() {

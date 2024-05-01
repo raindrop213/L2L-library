@@ -111,7 +111,6 @@ body {
 .btn-prev, .btn-next {
   cursor: pointer;
   width: 100%;
-  height: 15%;
   position: fixed; /* 固定位置 */
   left: 0; /* 左对齐 */
   right: 0; /* 右对齐 */
@@ -122,10 +121,12 @@ body {
 
 .btn-prev {
   top: 0; /* 顶部按钮 */
+  height: 15%;
 }
 
 .btn-next {
   bottom: 0; /* 底部按钮 */
+  height: 25%;
 }
 
 
