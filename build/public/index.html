@@ -110,6 +110,18 @@
       return div.textContent.trim() || div.innerText.trim() || "";
     }
 
+    // 移除注音（Aozora注音）并返回纯文本的函数
+    function removeAozora(text) {
+      // 匹配注音的正则表达式
+      const rubyRegex = /｜([^《]+)《[^》]+》/g;
+      
+      // 使用正则表达式替换注音为空字符串
+      const cleanText = text.replace(rubyRegex, '$1');
+      
+      return cleanText.trim();
+    }
+
+
     let tags = "h1, p, a, img";
 
     function loadFile(filePath) {
@@ -212,10 +224,11 @@
 
         // 判断点击的是否为p、a、h1标签
         const textElement = row.querySelector(".left > p, .left > a, .left > h1");
-        if (textElement) {
+        if (textElement && event.altKey) {  // 当Alt键未被按下时执行复制
           lightbox.style.display = "none"; // 显示弹窗
           const text = textElement.innerText || textElement.textContent;
           // copyTextToClipboard(removeRuby(text));
+          copyTextToClipboard(removeAozora(text));
         }
 
         // 判断点击的是否为img标签
