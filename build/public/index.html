@@ -244,57 +244,44 @@
 
     // 更新键盘事件处理程序
     let debounceTimer;
-    document.addEventListener("keydown", function (event) {
-      // 清除之前的计时器
-      clearTimeout(debounceTimer);
+    document.addEventListener('keydown', function(event) {
+    // 清除之前的计时器
+    clearTimeout(debounceTimer);
 
-      // 设置新的计时器
-      debounceTimer = setTimeout(function () {
+    // 设置新的计时器
+    debounceTimer = setTimeout(function() {
         const currentIndex = window.location.search
-          ? parseInt(new URLSearchParams(window.location.search).get("line"))
-          : 0;
-        const maxIndex = document.querySelectorAll(".row").length - 1;
+            ? parseInt(new URLSearchParams(window.location.search).get('line'))
+            : 0;
+        const maxIndex = document.querySelectorAll('.row').length - 1;
         let newIndex = currentIndex;
 
-        const lightbox = document.getElementById("lightbox");
-        if (event.key === "Escape") {
-          if (lightbox && lightbox.style.display === "block") {
-            lightbox.style.display = "none";
-          }
-        }
-
-        if (event.keyCode === 37 && currentIndex > 0) {
-          // 左箭头键
-          newIndex = currentIndex - 1;
-        } else if (event.keyCode === 39 && currentIndex < maxIndex) {
-          // 右箭头键
-          newIndex = currentIndex + 1;
+        if (event.keyCode === 39 && currentIndex > 0) {
+            // 右箭头键
+            newIndex = currentIndex - 1;
+        } else if (event.keyCode === 37 && currentIndex < maxIndex) {
+            // 左箭头键
+            newIndex = currentIndex + 1;
         }
 
         if (newIndex !== currentIndex) {
-          window.history.pushState({}, "", "?line=" + newIndex);
-          document
-            .querySelectorAll(".row")
-            .forEach((row) => row.classList.remove("highlight"));
-          const highlightedRow = document.getElementById("row-" + newIndex);
-          if (highlightedRow) {
-            highlightedRow.classList.add("highlight");
-            highlightedRow.scrollIntoView({ behavior: "auto", block: "center" });
+            window.history.pushState({}, '', '?line=' + newIndex);
+            document.querySelectorAll('.row').forEach((row) => row.classList.remove('highlight'));
+            const highlightedRow = document.getElementById('row-' + newIndex);
+            if (highlightedRow) {
+                highlightedRow.classList.add('highlight');
+                highlightedRow.scrollIntoView({ behavior: 'auto', block: 'center' });
 
-            // 检查新高亮的行是否包含图片
-            const imgElement = highlightedRow.querySelector(".left > img");
-            if (imgElement) {
-              const imgs = lightbox.querySelectorAll(".lightbox-img");
-              imgs[0].src = imgElement.src; // 更新左边图片
-              imgs[1].src = highlightedRow.querySelector(".right > img").src; // 更新右边图片
-              lightbox.style.display = "block"; // 显示弹窗
-            } else {
-              lightbox.style.display = "none"; // 如果没有图片，则隐藏弹窗
+                // 获取并复制日文文本
+                const jaTextElement = highlightedRow.querySelector('.left p');
+                if (jaTextElement) {
+                    const jaText = jaTextElement.innerText || jaTextElement.textContent;
+                    copyTextToClipboard(removeAozora(jaText));  // 假设您已经定义了 removeRuby 函数来处理文本
+                }
             }
-          }
         }
-      }, 80); // 防抖时间
-    });
+    }, 80); // 防抖时间
+});
   </script>
 
   <script>
