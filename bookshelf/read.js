@@ -6,6 +6,20 @@ function copyTextToClipboard(text) {
   textArea.select();
   document.execCommand("Copy");
   textArea.remove();
+
+  // 判断是否需要朗读文本
+  if (isTTS) {
+    window.speechSynthesis.cancel(); // 先停止当前正在进行的朗读
+
+    const voices = window.speechSynthesis.getVoices();
+    const selectedVoice = voices[5]; // 获取索引为5的语音对象
+
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'ja-JP'; // 设置语言为日语
+    msg.voice = selectedVoice; // 指定语音为索引为5的语音对象
+    msg.rate = 1.1;
+    window.speechSynthesis.speak(msg);
+  }
 }
 
 // 移除注音（ruby标签）并返回纯文本的函数
@@ -132,6 +146,7 @@ function addButtons() {
     <div class="btn-container">
       <button class="btn" onclick="toggleGuide()">Guide</button>
       <button class="btn" onclick="toggleFontSize()">TextSize: ${fontSizes[0]}</button>
+      <button class="btn" onclick="toggleTTS()">TTS</button>
       <button class="btn" onclick="toggleSelectCopy()">SelectCopy</button>
       <button class="btn" onclick="toggleMask()">Mask</button>
       <button class="btn" onclick="toggleVertical()">Vertical</button>
@@ -149,7 +164,8 @@ function addButtons() {
         <p class="guide">【1】键盘方向键 <b>↑</b> 上一句 和 <b>↓</b> 上一句，或者点击页面上下部分区域也可以逐句跳转，还可以直接点击句子；</p>
         <p class="guide">【2】被框住的句子会复制日文到剪切板；如果想选择文字的话可点击 <b>SelectCopy</b> 切换成复制鼠标选中文本的模式，都是默认去除振假名；</p>
         <p class="guide">【3】蒙版模式 <b>Mark</b> 仅显示选中的文本，其余隐藏；</p>
-        <p class="guide">【4】（尚未完善）垂直模式 <b>Vertical</b> 切换至竖排版，从右到左阅读。</p>
+        <p class="guide">【4】（尚未完善）垂直模式 <b>Vertical</b> 切换至竖排版，从右到左阅读；</p>
+        <p class="guide">【5】语音合成 <b>TTS</b> 阅读选中句子；</p>
       </div>
     </div>
   `;
@@ -158,6 +174,7 @@ function addButtons() {
 }
 
 // 初始化状态变量
+let isTTS = false;
 let isSelectCopy = false;
 let isMask = false;
 let isNight = false;
@@ -166,6 +183,17 @@ let istoggleVertical = false;
 let fontSizeIndex = 0; // 默认从第一个大小开始
 const fontSizes = ["24px", "30px", "18px"]; // 可切换的文字大小数组
 
+function toggleTTS() {
+  isTTS = !isTTS;
+  const ttsBtn = document.querySelector('.btn[onclick="toggleTTS()"]');
+  if (isTTS) {
+    ttsBtn.classList.add('active');
+    localStorage.setItem('TTS', 'true');
+  } else {
+    ttsBtn.classList.remove('active');
+    localStorage.setItem('TTS', 'false');
+  }
+}
 
 function toggleFontSize() {
   fontSizeIndex = (fontSizeIndex + 1) % fontSizes.length; // 更新索引循环
