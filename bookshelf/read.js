@@ -7,18 +7,19 @@ function copyTextToClipboard(text) {
   document.execCommand("Copy");
   textArea.remove();
 
-  // 判断是否需要朗读文本
+  window.speechSynthesis.cancel();
   if (isTTS) {
-    window.speechSynthesis.cancel(); // 先停止当前正在进行的朗读
-
     const voices = window.speechSynthesis.getVoices();
-    const selectedVoice = voices[5]; // 获取索引为5的语音对象
+    const selectedVoiceName = localStorage.getItem('selectedVoice');
+    const jaVoice = voices.find(voice => voice.name === selectedVoiceName);
 
-    const msg = new SpeechSynthesisUtterance(text);
-    msg.lang = 'ja-JP'; // 设置语言为日语
-    msg.voice = selectedVoice; // 指定语音为索引为5的语音对象
-    msg.rate = 1.1;
-    window.speechSynthesis.speak(msg);
+    if (jaVoice) {
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'ja-JP';
+      msg.voice = jaVoice;
+      msg.rate = 1.1;
+      window.speechSynthesis.speak(msg);
+    }
   }
 }
 
@@ -175,6 +176,7 @@ function addButtons() {
 
 // 初始化状态变量
 let isTTS = false;
+let voiceIndex = 0; // 默认从第一个语音开始
 let isSelectCopy = false;
 let isMask = false;
 let isNight = false;
@@ -184,14 +186,25 @@ let fontSizeIndex = 0; // 默认从第一个大小开始
 const fontSizes = ["24px", "30px", "18px"]; // 可切换的文字大小数组
 
 function toggleTTS() {
-  isTTS = !isTTS;
+  const voices = window.speechSynthesis.getVoices().filter(voice => voice.lang === 'ja-JP');
   const ttsBtn = document.querySelector('.btn[onclick="toggleTTS()"]');
-  if (isTTS) {
-    ttsBtn.classList.add('active');
-    localStorage.setItem('TTS', 'true');
-  } else {
+
+  // 语音索引循环
+  voiceIndex = (voiceIndex + 1) % (voices.length + 1);
+
+  // 如果索引超出语音数组范围，则设置为无语音
+  if (voiceIndex === voices.length) {
+    isTTS = false;
     ttsBtn.classList.remove('active');
+    ttsBtn.textContent = 'TTS: 無';
     localStorage.setItem('TTS', 'false');
+  } else {
+    isTTS = true;
+    const selectedVoice = voices[voiceIndex];
+    ttsBtn.classList.add('active');
+    ttsBtn.textContent = `TTS: ${selectedVoice.name}`;
+    localStorage.setItem('TTS', 'true');
+    localStorage.setItem('selectedVoice', selectedVoice.name);
   }
 }
 
@@ -325,7 +338,7 @@ function toggleGuide() {
 }
 
 
-// 更新的点击事件处理程序
+// 点击行时播放语音的逻辑
 document.addEventListener("click", function (event) {
   const row = event.target.closest(".row");
   const lightbox = document.getElementById("lightbox");
@@ -344,15 +357,29 @@ document.addEventListener("click", function (event) {
     if (textElement && !isSelectCopy) {
       const text = textElement.innerHTML || textElement.textContent;
       copyTextToClipboard(removeRuby(text));
+
+      if (isTTS) {
+        const voices = window.speechSynthesis.getVoices();
+        const selectedVoiceName = localStorage.getItem('selectedVoice');
+        const jaVoice = voices.find(voice => voice.name === selectedVoiceName);
+
+        if (jaVoice) {
+          const msg = new SpeechSynthesisUtterance(text);
+          msg.lang = 'ja-JP';
+          msg.voice = jaVoice;
+          msg.rate = 1.1;
+          window.speechSynthesis.speak(msg);
+        }
+      }
     }
 
     // 判断点击的是否为img标签
     const imgElement = row.querySelector(".ja > img");
     if (imgElement) {
       const imgs = lightbox.querySelectorAll(".lightbox-img");
-      imgs[0].src = imgElement.src; // 更新左边图片
-      imgs[1].src = row.querySelector(".zh > img").src; // 更新右边图片
-      lightbox.style.display = "block"; // 显示弹窗
+      imgs[0].src = imgElement.src;
+      imgs[1].src = row.querySelector(".zh > img").src;
+      lightbox.style.display = "block";
     }
   }
 });
