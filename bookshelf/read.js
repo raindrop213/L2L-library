@@ -357,20 +357,6 @@ document.addEventListener("click", function (event) {
     if (textElement && !isSelectCopy) {
       const text = textElement.innerHTML || textElement.textContent;
       copyTextToClipboard(removeRuby(text));
-
-      if (isTTS) {
-        const voices = window.speechSynthesis.getVoices();
-        const selectedVoiceName = localStorage.getItem('selectedVoice');
-        const jaVoice = voices.find(voice => voice.name === selectedVoiceName);
-
-        if (jaVoice) {
-          const msg = new SpeechSynthesisUtterance(text);
-          msg.lang = 'ja-JP';
-          msg.voice = jaVoice;
-          msg.rate = 1.1;
-          window.speechSynthesis.speak(msg);
-        }
-      }
     }
 
     // 判断点击的是否为img标签
