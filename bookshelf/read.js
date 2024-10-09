@@ -236,9 +236,7 @@ function toggleVertical() {
   }
 
   // 重新定位到当前高亮行
-  const currentIndex = window.location.search
-    ? parseInt(new URLSearchParams(window.location.search).get("line"))
-    : 0;
+  const currentIndex = getCurrentLine();
 
   // 滚动到当前行
   const highlightedRow = document.getElementById("row-" + currentIndex);
@@ -372,9 +370,7 @@ document.addEventListener("click", function (event) {
 
 // 跳转到某一条的函数
 function navigateRows(direction) {
-  const currentIndex = window.location.search
-    ? parseInt(new URLSearchParams(window.location.search).get("line"), 10)
-    : 0;
+  const currentIndex = getCurrentLine();
   const maxIndex = document.querySelectorAll(".row").length - 1;
   let newIndex = currentIndex + direction;
 
@@ -382,6 +378,7 @@ function navigateRows(direction) {
   if (newIndex > maxIndex) newIndex = maxIndex;
 
   window.history.pushState({}, "", "?line=" + newIndex);
+  saveLine(newIndex);
 
   document.querySelectorAll(".row").forEach(row => row.classList.remove("highlight"));
   const highlightedRow = document.getElementById("row-" + newIndex);
@@ -444,7 +441,27 @@ function applyInitialSettings() {
   toggleNight(nightMode);
 }
 
+
+// 保存当前行数到localStorage
+function saveLine(lineNumber) {
+  localStorage.setItem('currentLine', lineNumber);
+}
+// 获取当前行数
+function getCurrentLine() {
+  return window.location.search
+    ? parseInt(new URLSearchParams(window.location.search).get("line"), 10)
+    : 0;
+}
+// 读取并导航到上次保存的行数
+function navigateToLastLine() {
+  const savedLine = localStorage.getItem('currentLine');
+  if (savedLine) {
+    window.history.pushState({}, "", "?line=" + savedLine);
+  }
+}
+
 window.onload = function() {
   addButtons(); // 添加按钮
   applyInitialSettings(); // 应用初始设置
+  navigateToLastLine(); // 回到上次保存的行
 };
