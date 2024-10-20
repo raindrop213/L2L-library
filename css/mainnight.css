@@ -287,13 +287,13 @@ margin-left:0.6em;
 grid-area: epub;
 text-decoration:underline;
 font-size: 0.75em;
-margin-left:0.6em;
-margin-right:1.2em;
+text-align: right;
 }
 .item-7 {
 grid-area: html;
 text-decoration:underline;
 font-size: 0.75em;
+text-align: right;
 }
 .item-8 {
 grid-area: genre;
